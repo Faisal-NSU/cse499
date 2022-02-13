@@ -1,5 +1,7 @@
 /****** IGNORE ******/
-
+table, th, td {
+  padding-right: 10px;
+}
 .shadow-textarea textarea.form-control::placeholder {
   font-weight: 300;
 }
@@ -12,8 +14,6 @@ body {
     margin: 50px auto; 
     background-color: #a76ad852; 
   }
-
-  
   
   /****** CODE ******/
   
@@ -32,12 +32,12 @@ body {
   .file-upload .file-select.file-select-disabled:hover .file-select-name{line-height:40px;display:inline-block;padding:0 10px;}
 
   .zoom {
-    
-   
+    border: 1px solid #555;
     transition: transform .2s; /* Animation */
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: 0 auto;
+    padding: 5px;
   }
 
   .zoom:hover {
@@ -52,4 +52,6 @@ body {
     color: rgb(0, 0, 0);
     text-align: center;
     margin-top: 10px;
+    padding-right: 30px;
   }
+

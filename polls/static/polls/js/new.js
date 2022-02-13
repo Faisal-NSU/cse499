@@ -1,6 +1,5 @@
 let csr = $("input[name=csrfmiddlewaretoken").val();
 var finalEnglishToBanglaNumber = {
-
     অ: '1',
     আ: '2',
     'া': '2',
@@ -50,7 +49,6 @@ var finalEnglishToBanglaNumber = {
     ভ: '27',
     ম: '28',
     য়: '29',
-
     র: '30',
     '্': '30',
     ল: '31',
@@ -71,13 +69,38 @@ function countWords(str) {
     return str;
     } 
 
+async function start(str) {
+    var link = 'https://www.google.com/inputtools/request?text='+str+'&ime=transliteration_en_bn&num=1&app=jsapi';
+    const response = await fetch(link)
+    const data = await response.json()
+    
+    if(data[0] == 'SUCCESS'){
+        var bangla = data[1][0][1][0]
+        console.log(bangla);
+        $("#exampleFormControlTextarea6").val(bangla+' ');
+    }
+    else{
+        return str;
+    }
+}
+
+
+document.getElementById("exampleFormControlTextarea6").addEventListener('keydown', (event) => {
+    if (event.keyCode === 32 || event.keyCode === 13) {
+    var text = $("#exampleFormControlTextarea6").val();
+    start(text);
+    }
+  });
+
+
 $("#convert-button").click(function(){
+    //get the text, count words
     let text = $("#exampleFormControlTextarea6").val();
     console.log(text);
     text = countWords(text);
     let words = text.split(' ');
 
-
+    //make a table upon the words
     $("#table-maker").empty();
     var tbl = document.createElement("table");
     var tblBody = document.createElement("tbody");
@@ -87,6 +110,7 @@ $("#convert-button").click(function(){
     tblcptn.setAttribute("caption-side", "top");
     tblcptn.appendChild(cellText);  
     tbl.appendChild(tblcptn);
+
     /*
     var row = document.createElement("tr");
     var x = document.createElement("th");
@@ -101,8 +125,7 @@ $("#convert-button").click(function(){
     var baseURL = "http://127.0.0.1:8000/static/polls/bsl-image/";
 
     for (var x in words){
-        console.log(words[x]);
-        //make a word row table and show word
+        // for each word in the text and make a row for each word
         var row = document.createElement("tr");
         var cell = document.createElement("td");
         var cellText = document.createTextNode(words[x]);
@@ -111,11 +134,11 @@ $("#convert-button").click(function(){
         row.appendChild(cell);    
 
         for(var c in words[x]){
-            // add image cell
+            // for each character in the word make a cell and get the image      
             var character = words[x][c];
             var imageName = finalEnglishToBanglaNumber[character];
-
-            if ( character in finalEnglishToBanglaNumber){
+            
+            if (character in finalEnglishToBanglaNumber){
                 var cell = document.createElement("td");
                 var img = document.createElement('img');
                 img.setAttribute("src", baseURL+imageName+".jpg");             
@@ -124,18 +147,12 @@ $("#convert-button").click(function(){
                 cell.appendChild(img);
                 row.appendChild(cell);
             }
-            else
-            {
-                
+            else{
+                console.log(character);
             }
-            
         }
         tblBody.appendChild(row);
     }
-
     tbl.appendChild(tblBody);
-            // appends <table> into <body>
-            tbl.setAttribute("border", "1");
     $("#table-maker").append(tbl);
-
 });  

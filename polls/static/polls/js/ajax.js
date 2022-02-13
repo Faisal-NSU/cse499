@@ -1,5 +1,7 @@
 let csr = $("input[name=csrfmiddlewaretoken").val();
 let base64Image;
+
+
 $("#image-selector").change(function() {
     let reader = new FileReader();
     reader.onload = function(e) {
