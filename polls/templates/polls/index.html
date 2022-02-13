@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Lets Deploy{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>   
+    <link rel="stylesheet" href="{% static 'polls/css/myCss.css' %}"> 
+
+</head>
+<body>
+
+    {% csrf_token %}
+
+    
+    <h1 style="font-weight:bold">DJANGO Sign Language </h1> 
+    
+    <div class="form-group shadow-textarea">
+      <label for="exampleFormControlTextarea6">Input Your text:</label>
+      <textarea class="form-control z-depth-1" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here...">আমি ভাল আছি </textarea>
+      <button class="btn btn-info" id="convert-button" style="margin-top:1%;">Convert BSL </button>
+    </div>
+
+    
+        <div class="col-sm" style="display:flex;justify-content:center;align-items:center;">
+          <div id="table-maker" style="text-align: center;" ></div>
+        </div>
+  
+
+    
+
+
+
+    <script type="text/javascript" src="{% static 'polls/js/new.js' %}"></script>  
+    
+</body>
+
+</html>

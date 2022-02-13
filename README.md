@@ -1,1 +1,2 @@
-# cse499
+# django model deploy
+ 
