@@ -62,6 +62,7 @@ var finalEnglishToBanglaNumber = {
     'ঃ': '36',
  };
 
+ //some string manupulation and preprocessing
 function countWords(str) {
     str = str.replace(/(^\s*)|(\s*$)/gi,"");
     str = str.replace(/[ ]{2,}/gi," ");
@@ -69,13 +70,14 @@ function countWords(str) {
     return str;
     } 
 
-async function start(str) {
+// take english string (Banglish) and converts to bangla string and setes to the input field
+async function convertEngToBang(str) {
     var link = 'https://www.google.com/inputtools/request?text='+str+'&ime=transliteration_en_bn&num=1&app=jsapi';
-    const response = await fetch(link)
-    const data = await response.json()
+    const response = await fetch(link);
+    const data = await response.json();
     
     if(data[0] == 'SUCCESS'){
-        var bangla = data[1][0][1][0]
+        var bangla = data[1][0][1][0];
         console.log(bangla);
         $("#exampleFormControlTextarea6").val(bangla+' ');
     }
@@ -84,75 +86,95 @@ async function start(str) {
     }
 }
 
-
-document.getElementById("exampleFormControlTextarea6").addEventListener('keydown', (event) => {
+$("#exampleFormControlTextarea6").keydown(function(event){ 
     if (event.keyCode === 32 || event.keyCode === 13) {
     var text = $("#exampleFormControlTextarea6").val();
-    start(text);
+    convertEngToBang(text);
     }
-  });
+});
+
+$("#exampleFormControlTextarea6").change(function(event){    
+    var text = $("#exampleFormControlTextarea6").val();
+    convertEngToBang(text);   
+});
 
 
 $("#convert-button").click(function(){
     //get the text, count words
-    let text = $("#exampleFormControlTextarea6").val();
-    console.log(text);
-    text = countWords(text);
-    let words = text.split(' ');
+    var text = $("#exampleFormControlTextarea6").val();
+    convertEngToBang(text).then(function(result){
+        var text = $("#exampleFormControlTextarea6").val();
+        
+        text = $("#exampleFormControlTextarea6").val();
+        console.log(text);
+        text = countWords(text);
+        let words = text.split(' ');
 
-    //make a table upon the words
-    $("#table-maker").empty();
-    var tbl = document.createElement("table");
-    var tblBody = document.createElement("tbody");
-    var tblcptn = document.createElement("caption");
-    var cellText = document.createTextNode("বাংলা অনুবাদ");
-    tblcptn.setAttribute("class", "word-text");
-    tblcptn.setAttribute("caption-side", "top");
-    tblcptn.appendChild(cellText);  
-    tbl.appendChild(tblcptn);
+        //make a table upon the words
+        $("#table-maker").empty();
+        var tbl = document.createElement("table");
+        var tblBody = document.createElement("tbody");
+        var tblcptn = document.createElement("caption");
+        var cellText = document.createTextNode("বাংলা অনুবাদ");
+        tblcptn.setAttribute("class", "word-text");
+        tblcptn.setAttribute("caption-side", "top");
+        tblcptn.appendChild(cellText);  
+        tbl.appendChild(tblcptn);
 
-    /*
-    var row = document.createElement("tr");
-    var x = document.createElement("th");
-    x.appendChild(document.createTextNode("Words"));
-    row.appendChild(x);
-    var x = document.createElement("th");                  
-    x.appendChild(document.createTextNode("Corresponding image"));
-    row.appendChild(x);
-    tblBody.appendChild(row);
-    */
-
-    var baseURL = "http://127.0.0.1:8000/static/polls/bsl-image/";
-
-    for (var x in words){
-        // for each word in the text and make a row for each word
+        /*
         var row = document.createElement("tr");
-        var cell = document.createElement("td");
-        var cellText = document.createTextNode(words[x]);
-        cell.setAttribute("class", "word-text");
-        cell.appendChild(cellText);
-        row.appendChild(cell);    
-
-        for(var c in words[x]){
-            // for each character in the word make a cell and get the image      
-            var character = words[x][c];
-            var imageName = finalEnglishToBanglaNumber[character];
-            
-            if (character in finalEnglishToBanglaNumber){
-                var cell = document.createElement("td");
-                var img = document.createElement('img');
-                img.setAttribute("src", baseURL+imageName+".jpg");             
-                img.setAttribute('class', 'zoom');
-                var cellText = document.createTextNode(img);
-                cell.appendChild(img);
-                row.appendChild(cell);
-            }
-            else{
-                console.log(character);
-            }
-        }
+        var x = document.createElement("th");
+        x.appendChild(document.createTextNode("Words"));
+        row.appendChild(x);
+        var x = document.createElement("th");                  
+        x.appendChild(document.createTextNode("Corresponding image"));
+        row.appendChild(x);
         tblBody.appendChild(row);
-    }
-    tbl.appendChild(tblBody);
-    $("#table-maker").append(tbl);
+        */
+
+        var baseURL = "http://127.0.0.1:8000/static/polls/bsl-image/";
+
+        for (var x in words){
+            // for each word in the text and make a row for each word
+            var row = document.createElement("tr");
+            var cell = document.createElement("td");
+            var cellText = document.createTextNode(words[x]);
+            cell.setAttribute("class", "word-text");
+            cell.appendChild(cellText);
+            row.appendChild(cell);    
+
+            for(var c in words[x]){
+                // for each character in the word make a cell and get the image      
+                var character = words[x][c];
+                var imageName = finalEnglishToBanglaNumber[character];
+                
+                if((parseInt(c) +1) % 6 == 0){
+                    tblBody.appendChild(row);
+                    var row = document.createElement("tr");
+                    var cell = document.createElement("td");
+                    var cellText = document.createTextNode('---');
+                    cell.setAttribute("class", "word-text");
+                    cell.appendChild(cellText);
+                    row.appendChild(cell); 
+                }
+                
+                if (character in finalEnglishToBanglaNumber){
+                    var cell = document.createElement("td");
+                    var img = document.createElement('img');
+                    img.setAttribute("src", baseURL+imageName+".jpg");             
+                    img.setAttribute('class', 'zoom');
+                    var cellText = document.createTextNode(img);
+                    cell.appendChild(img);
+                    row.appendChild(cell);
+                }
+                else{
+                    console.log(character);
+                }
+            }
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        $("#table-maker").append(tbl);
+    });
+    
 });  
