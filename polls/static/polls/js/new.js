@@ -115,7 +115,7 @@ $("#convert-button").click(function(){
         var tbl = document.createElement("table");
         var tblBody = document.createElement("tbody");
         var tblcptn = document.createElement("caption");
-        var cellText = document.createTextNode("বাংলা অনুবাদ");
+        var cellText = document.createTextNode("ছবিসহ বাংলা অনুবাদ");
         tblcptn.setAttribute("class", "word-text");
         tblcptn.setAttribute("caption-side", "top");
         tblcptn.appendChild(cellText);  
